@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher - Decode Your Communication DNA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Cipher</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#analysis">Video Analysis</a></li>
+                <li><a href="#insights">Insights</a></li>
+                <li><a href="#progress">Progress</a></li>
+                <li><a href="#profile">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-container">
+                <h1>Decode Your Communication DNA</h1>
+                <p>Upload any video of yourself speaking and unlock deep psychological insights about your confidence, authenticity, and communication patterns through advanced AI analysis.</p>
+                
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📹</div>
+                    <h3>Upload Your First Video</h3>
+                    <p>Drag and drop your video here or click to browse</p>
+                    <p class="file-info">Supports MP4, MOV, and AVI files up to 100MB</p>
+                    <input type="file" id="videoInput" accept="video/*" hidden>
+                    <button class="upload-btn" id="uploadBtn">Choose Video File</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard-section" id="dashboard">
+            <div class="dashboard-container">
+                <h2>Your Psychological Profile</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-number">85</div>
+                        <div class="metric-label">Confidence Score</div>
+                        <div class="metric-description">Based on voice patterns, posture, and facial expressions</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">92</div>
+                        <div class="metric-label">Authenticity Index</div>
+                        <div class="metric-description">How genuine you appear when communicating</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">78</div>
+                        <div class="metric-label">Engagement Factor</div>
+                        <div class="metric-description">Your ability to capture and hold attention</div>
+                    </div>
+                </div>
+
+                <div class="insights-section">
+                    <h3>Recent Analysis</h3>
+                    <div class="insight-card">
+                        <h4>Communication Pattern Analysis</h4>
+                        <p>Your recent videos show strong confidence markers in your opening statements, with consistent eye contact and steady vocal tone. Your authenticity scores peak during personal anecdotes, suggesting you're most genuine when sharing experiences rather than presenting facts.</p>
+                        <span class="insight-date">2 days ago</span>
+                    </div>
+                </div>
+
+                <div class="recommendations-section">
+                    <h3>Priority Recommendations</h3>
+                    <div class="recommendation-card">
+                        <div class="recommendation-priority">High Priority</div>
+                        <h4>Practice Power Poses</h4>
+                        <p>Stand with hands on hips for 2 minutes before recording to boost confidence markers by 15-20%</p>
+                    </div>
+                    <div class="recommendation-card">
+                        <div class="recommendation-priority">Medium</div>
+                        <h4>Reduce Filler Words</h4>
+                        <p>Your 'um' frequency increases when discussing technical topics. Practice pause-and-breathe technique.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
