@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- SEARCH: "PRACTICE_PAGE_HEAD" -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Mode - Cipher</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles-modern.css">
+</head>
+<body>
+
+  <!-- SEARCH: "SHARED_NAVBAR" -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="assets/images/logo.png" alt="Cipher Logo" style="height: 48px; width: 48px; object-fit: contain;">
+          <span style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #764ba2 0%, #667eea 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cipher</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="results.html">Dashboard</a></li>
+        <li><a href="practice.html">Practice</a></li>
+        <li><a href="progress.html">Progress</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- SEARCH: "PRACTICE_MAIN_CONTENT" -->
+  <div class="main-content" style="padding-top: 100px;">
+    
+    <section id="practice" class="practice-section">
+      <div class="practice-container">
+        <h2>🎯 Practice Mode</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem;">
+          Practice with pre-written scripts or create your own. Record yourself and get instant comparison analysis.
+        </p>
+
+        <!-- Mode Selector -->
+        <div class="practice-mode-selector">
+          <button class="practice-mode-btn active" id="btnLibraryScripts" onclick="showScriptLibrary()">
+            📚 Script Library
+          </button>
+          <button class="practice-mode-btn" id="btnCustomScript" onclick="showCustomScript()">
+            ✍️ Custom Script
+          </button>
+        </div>
+
+        <!-- Script Library View -->
+        <div id="scriptLibraryView">
+          <div class="script-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Custom Script View -->
+        <div id="customScriptView" style="display: none;">
+          <div class="custom-script-container">
+            <h3>✍️ Create Your Own Script</h3>
+            
+            <label for="customScriptTitle">Script Title</label>
+            <input 
+              type="text" 
+              id="customScriptTitle" 
+              placeholder="e.g., My Sales Pitch"
+              class="input-modern"
+            >
+
+            <label for="customScriptText">Your Script (10-500 words)</label>
+            <textarea 
+              id="customScriptText" 
+              placeholder="Type your script here..."
+              class="input-modern"
+              style="min-height: 200px;"
+            ></textarea>
+
+            <div class="script-stats">
+              <div><span>📝 Word Count:</span> <span id="customWordCount">0</span></div>
+              <div><span>⏱️ Est. Time:</span> <span id="customEstimatedTime">0:00</span></div>
+              <div><span>Status:</span> <span id="customScriptStatus">Enter at least 10 words</span></div>
+            </div>
+
+            <button id="startCustomPracticeBtn" class="btn-modern btn-modern-primary" disabled>
+              🚀 Start Practice
+            </button>
+          </div>
+        </div>
+
+        <!-- Recording Interface -->
+        <div id="practiceRecordingInterface" style="display: none;" class="practice-recording">
+          <div class="card-modern" style="text-align: center; padding: 2rem;">
+            <h3 id="practiceScriptTitle">Script Title</h3>
+            
+            <div style="display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem;">
+              <div>
+                <span style="color: var(--text-muted);">⏱️ Duration:</span>
+                <span id="practiceEstimatedTime">30 seconds</span>
+              </div>
+              <div>
+                <span style="color: var(--text-muted);">📝 Words:</span>
+                <span id="practiceWordCount">75</span>
+              </div>
+            </div>
+
+            <div class="script-display">
+              <p id="practiceScriptText" style="line-height: 2;">
+                <!-- Script text -->
+              </p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+              <button id="startPracticeRecordBtn" onclick="startPracticeRecording()" class="btn-modern btn-modern-danger">
+                🎙️ Start Recording
+              </button>
+              <button id="stopPracticeRecordBtn" onclick="stopPracticeRecording()" class="btn-modern btn-modern-ghost" style="display: none;">
+                ⏹️ Stop & Analyze
+              </button>
+              <button onclick="resetPracticeMode()" class="btn-modern btn-modern-ghost">
+                ⬅️ Back to Scripts
+              </button>
+            </div>
+
+            <div id="recordingTimer" style="display: none; margin-top: 1rem;">
+              <span style="font-size: 1.5rem; font-weight: 700;" id="recordingTime">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Comparison Results -->
+        <div id="practiceComparisonResults" style="display: none;" class="practice-results">
+          <div class="card-modern" style="text-align: center; padding: 3rem;">
+            <h3>📊 Practice Analysis</h3>
+
+            <!-- Accuracy Ring -->
+            <div class="accuracy-ring">
+              <svg width="200" height="200" style="transform: rotate(-90deg);">
+                <circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none"></circle>
+                <circle 
+                  id="accuracyCircle"
+                  cx="100" cy="100" r="80" 
+                  stroke="#10b981" stroke-width="12" fill="none"
+                  stroke-dasharray="502.4" stroke-dashoffset="502.4"
+                  style="transition: stroke-dashoffset 1s ease;"
+                ></circle>
+              </svg>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <div id="accuracyPercentage" style="font-size: 3rem; font-weight: 800; color: #10b981;">0%</div>
+                <div style="color: var(--text-muted);">Accuracy</div>
+              </div>
+            </div>
+
+            <p id="accuracyFeedback" style="margin-top: 2rem;"></p>
+
+            <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem;">
+              <div class="badge-modern badge-modern-green">
+                ✅ <span id="matchedWords">0</span> Exact
+              </div>
+              <div class="badge-modern badge-modern-blue">
+                ≈ <span id="similarWords">0</span> Similar
+              </div>
+              <div class="badge-modern" style="background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); color: #f87171;">
+                ➕ <span id="addedWords">0</span> Different
+              </div>
+            </div>
+
+            <button onclick="resetPracticeMode()" class="btn-modern btn-modern-primary" style="margin-top: 2rem;">
+              🔄 Practice Again
+            </button>
+          </div>
+
+          <!-- Comparison -->
+          <div class="comparison-container" style="margin-top: 2rem;">
+            <div class="card-modern">
+              <h4>📄 Original Script</h4>
+              <div id="originalScriptComparison"></div>
+            </div>
+            <div class="card-modern">
+              <h4>🎤 What You Said</h4>
+              <div id="spokenTextComparison"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- SEARCH: "SHARED_FOOTER" -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-tagline">🔮 Cipher - Decode Your Communication DNA</div>
+      <p class="footer-subtitle">Powered by AI Psychology • Built with ❤️ by Asfan Vohra</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="results.html">Dashboard</a>
+        <a href="progress.html">Progress</a>
+      </div>
+      <p class="footer-copyright">© 2025 Cipher AI. Your speech, your insights, your growth.</p>
+    </div>
+  </footer>
+
+  <!-- SEARCH: "PRACTICE_PAGE_SCRIPTS" -->
+  <script src="js/utils/navigation.js"></script>
+  <script src="js/modules/tts.js"></script>
+  <script src="js/modules/ai-assistant.js"></script>
+  <script src="script.js"></script>
+  
+  <!-- SEARCH: "PRACTICE_PAGE_INIT" -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize practice mode
+      initializePracticeMode();
+      console.log('✅ Practice page loaded');
+    });
+  </script>
+</body>
+</html>

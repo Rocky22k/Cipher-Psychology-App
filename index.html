@@ -1,91 +1,814 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cipher - Decode Your Communication DNA</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cipher - Decode Your Communication DNA</title>
+
+  <!-- MediaPipe CDN -->
+  crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles-modern.css">
+  <!-- SEARCH: "ADD_NAVIGATION_SCRIPT" -->
+  <script src="js/utils/navigation.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <h1>Cipher</h1>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#dashboard">Dashboard</a></li>
-                <li><a href="#analysis">Video Analysis</a></li>
-                <li><a href="#insights">Insights</a></li>
-                <li><a href="#progress">Progress</a></li>
-                <li><a href="#profile">Profile</a></li>
-            </ul>
+
+  <!-- ===== NAVIGATION ===== -->
+  <!-- SEARCH: "NAVBAR_SECTION" -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+        <a href="#hero" onclick="goHome()"
+          style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+          <img src="assets/images/logo.png" alt="Cipher Logo" style="height: 48px; width: 48px; object-fit: contain;">
+          <span
+            style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #764ba2 0%, #667eea 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Cipher</span>
+        </a>
+      </div>
+
+
+      <ul class="nav-menu">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#transcript">Transcript</a></li>
+        <li><a href="#analysis">Analysis</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#progress">Progress</a></li>
+        <li><a href="#howitworks">How It Works</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="main-content">
+
+    <!-- ===== HERO SECTION ===== -->
+    <!-- SEARCH: "HERO_SECTION" -->
+    <section id="hero" class="hero-section">
+      <div class="hero-container">
+        <h1>Decode Your Communication DNA</h1>
+        <p>Upload any speech, pitch, or presentation and get AI-powered insights on your confidence, authenticity, and
+          engagement. Transform the way you communicate.</p>
+
+        <!-- Upload Zone -->
+        <div id="uploadZone" class="upload-zone">
+          <div class="upload-icon">🎥</div>
+          <h3>Drop Your Video or Audio Here</h3>
+          <p>Or click to browse</p>
+          <button id="uploadBtn" class="btn-modern btn-modern-primary">
+            📁 Choose File
+          </button>
+          <input type="file" id="mediaInput" accept="video/*,audio/*" style="display: none;">
+          <p class="file-info">Supports MP4, MP3, WAV, WebM • Max 2GB</p>
         </div>
-    </nav>
 
-    <main class="main-content">
-        <section class="hero-section">
-            <div class="hero-container">
-                <h1>Decode Your Communication DNA</h1>
-                <p>Upload any video of yourself speaking and unlock deep psychological insights about your confidence, authenticity, and communication patterns through advanced AI analysis.</p>
-                
-                <div class="upload-zone" id="uploadZone">
-                    <div class="upload-icon">📹</div>
-                    <h3>Upload Your First Video</h3>
-                    <p>Drag and drop your video here or click to browse</p>
-                    <p class="file-info">Supports MP4, MOV, and AVI files up to 100MB</p>
-                    <input type="file" id="videoInput" accept="video/*" hidden>
-                    <button class="upload-btn" id="uploadBtn">Choose Video File</button>
-                </div>
+        <!-- Recording Option -->
+        <div style="margin-top: 2rem; text-align: center;">
+          <button id="recordBtn" class="btn-modern btn-modern-danger" style="font-size: 1.1rem;">
+            🎙️ Record Live
+          </button>
+        </div>
+
+        <!-- Example Buttons (Hidden Demo Mode) -->
+        <details style="margin-top: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+          <summary
+            style="cursor: pointer; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; text-align: center; color: var(--text-secondary); font-weight: 600;">
+            🎬 Try Demo Examples
+          </summary>
+          <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; justify-content: center;">
+            <button id="tryExamplePitch" class="btn-modern btn-modern-ghost">
+              🔎 Product Pitch Example
+            </button>
+            <button id="tryExampleInterview" class="btn-modern btn-modern-ghost">
+              🔎 Job Interview Example
+            </button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== DASHBOARD SECTION ===== -->
+    <!-- SEARCH: "DASHBOARD_SECTION" -->
+    <section id="dashboard" class="dashboard-section" style="display: none;">
+      <div class="dashboard-container">
+        <h2>📊 Your Communication Dashboard</h2>
+
+        <!-- Main Scores -->
+        <div class="metrics-grid">
+          <!-- Confidence Card -->
+          <div class="metric-card">
+            <div class="metric-number" id="confidenceScore">0</div>
+            <div class="metric-label">Confidence</div>
+            <p class="metric-description">How assertive and self-assured you sound</p>
+          </div>
+
+          <!-- Authenticity Card -->
+          <div class="metric-card" style="background: linear-gradient(135deg, #10b981, #059669);">
+            <div class="metric-number" id="authenticityScore">0</div>
+            <div class="metric-label">Authenticity</div>
+            <p class="metric-description">How genuine and relatable you appear</p>
+          </div>
+
+          <!-- Engagement Card -->
+          <div class="metric-card" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+            <div class="metric-number" id="engagementScore">0</div>
+            <div class="metric-label">Engagement</div>
+            <p class="metric-description">How captivating and interesting you are</p>
+          </div>
+        </div>
+
+        <!-- Score Breakdowns (Collapsible) -->
+        <div class="metrics-breakdowns">
+          <details class="metric-breakdown" id="confidenceBreakdownDetail">
+            <summary>🔍 How we calculated Confidence</summary>
+            <div class="breakdown-body" id="confidenceBreakdown">
+              <!-- Populated by JS -->
             </div>
-        </section>
+          </details>
 
-        <section class="dashboard-section" id="dashboard">
-            <div class="dashboard-container">
-                <h2>Your Psychological Profile</h2>
-                <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="metric-number">85</div>
-                        <div class="metric-label">Confidence Score</div>
-                        <div class="metric-description">Based on voice patterns, posture, and facial expressions</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-number">92</div>
-                        <div class="metric-label">Authenticity Index</div>
-                        <div class="metric-description">How genuine you appear when communicating</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-number">78</div>
-                        <div class="metric-label">Engagement Factor</div>
-                        <div class="metric-description">Your ability to capture and hold attention</div>
-                    </div>
-                </div>
-
-                <div class="insights-section">
-                    <h3>Recent Analysis</h3>
-                    <div class="insight-card">
-                        <h4>Communication Pattern Analysis</h4>
-                        <p>Your recent videos show strong confidence markers in your opening statements, with consistent eye contact and steady vocal tone. Your authenticity scores peak during personal anecdotes, suggesting you're most genuine when sharing experiences rather than presenting facts.</p>
-                        <span class="insight-date">2 days ago</span>
-                    </div>
-                </div>
-
-                <div class="recommendations-section">
-                    <h3>Priority Recommendations</h3>
-                    <div class="recommendation-card">
-                        <div class="recommendation-priority">High Priority</div>
-                        <h4>Practice Power Poses</h4>
-                        <p>Stand with hands on hips for 2 minutes before recording to boost confidence markers by 15-20%</p>
-                    </div>
-                    <div class="recommendation-card">
-                        <div class="recommendation-priority">Medium</div>
-                        <h4>Reduce Filler Words</h4>
-                        <p>Your 'um' frequency increases when discussing technical topics. Practice pause-and-breathe technique.</p>
-                    </div>
-                </div>
+          <details class="metric-breakdown" id="authenticityBreakdownDetail">
+            <summary>🔍 How we calculated Authenticity</summary>
+            <div class="breakdown-body" id="authenticityBreakdown">
+              <!-- Populated by JS -->
             </div>
-        </section>
-    </main>
+          </details>
 
+          <details class="metric-breakdown" id="engagementBreakdownDetail">
+            <summary>🔍 How we calculated Engagement</summary>
+            <div class="breakdown-body" id="engagementBreakdown">
+              <!-- Populated by JS -->
+            </div>
+          </details>
+        </div>
+
+        <!-- AI-Generated Insights -->
+        <div class="insights-section">
+          <h3>🧠 AI-Powered Insights</h3>
+          <div id="recommendationsContainer">
+            <!-- Populated by LLM -->
+          </div>
+        </div>
+
+        <!-- Recent Insight -->
+        <div class="insights-section" style="margin-top: 2rem;">
+          <h3>💡 Quick Analysis</h3>
+          <div class="insight-card">
+            <div id="recentInsight">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Personalized Practice Recommendations -->
+        <div id="practiceRecommendations" style="display: none; margin-top: 3rem;">
+          <h3>🎯 Your Personalized Practice Plan</h3>
+          <div id="practiceRecommendationsContainer">
+            <!-- Populated by LLM -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRANSCRIPT SECTION ===== -->
+    <!-- SEARCH: "TRANSCRIPT_SECTION" -->
+    <section id="transcript" class="transcript-section" style="display: none;">
+      <div class="transcript-container">
+        <div class="transcript-header">
+          <h2>📝 Your Transcript</h2>
+          <div class="video-info">
+            <span class="video-title" id="videoTitle">Analysis</span>
+            <span class="analysis-date" id="analysisDate"></span>
+          </div>
+        </div>
+
+        <!-- Audio Player (if available) -->
+        <div id="audioPlayerControls" style="display: none; text-align: center; margin-bottom: 2rem;">
+          <audio id="audioPlayer" controls style="width: 100%; max-width: 600px; border-radius: 12px;"></audio>
+          <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <button onclick="document.getElementById('audioPlayer').playbackRate = 0.75"
+              class="btn-modern btn-modern-ghost">
+              0.75x
+            </button>
+            <button onclick="document.getElementById('audioPlayer').playbackRate = 1"
+              class="btn-modern btn-modern-ghost">
+              1x
+            </button>
+            <button onclick="document.getElementById('audioPlayer').playbackRate = 1.5"
+              class="btn-modern btn-modern-ghost">
+              1.5x
+            </button>
+            <button onclick="downloadAudio()" class="btn-modern btn-modern-ghost">
+              💾 Download Audio
+            </button>
+            <button onclick="exportAnalysisReport()" class="btn-modern btn-modern-ghost">
+              📄 Export Report
+            </button>
+          </div>
+        </div>
+
+        <!-- Transcript Controls -->
+        <div class="transcript-panel">
+          <div class="transcript-controls">
+            <h3>Highlight Psychology</h3>
+            <div class="highlight-options">
+              <button class="highlight-btn active" data-type="confidence">💪 Confidence</button>
+              <button class="highlight-btn" data-type="authenticity">✨ Power Words</button>
+              <button class="highlight-btn" data-type="filler">🚫 Filler Words</button>
+            </div>
+          </div>
+
+          <!-- UPDATED: Better Tab Labels -->
+          <!-- SEARCH: "TRANSCRIPT_TAB_LABELS_IMPROVED" -->
+          <div class="transcript-mode-toggle">
+            <button class="transcript-tab active" id="btnViewEnhanced">
+              ✨ AI-Polished
+            </button>
+            <button class="transcript-tab" id="btnViewRaw">
+              🔧 Original Recording
+            </button>
+            <button class="transcript-tab" id="btnViewWords">
+              🔬 Psychology Deep-Dive
+            </button>
+            <button class="transcript-tab" id="btnEditTranscript">
+              ✏️ Manual Corrections
+            </button>
+          </div>
+
+          <!-- Transcript Content -->
+          <div class="transcript-content" id="transcriptContent">
+            <p style="color: var(--text-muted); text-align: center;">Transcript will appear here after analysis.</p>
+          </div>
+
+          <!-- Transcript Insights -->
+          <div class="transcript-insights">
+            <div class="insight-highlight">
+              <h4 id="insightTitle">Transcript Insights</h4>
+              <p id="insightDescription">Click on any word in Word Analysis mode to see detailed psychology breakdown.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ANALYSIS SECTION ===== -->
+    <!-- SEARCH: "ANALYSIS_SECTION" -->
+    <section id="analysis" class="analysis-section" style="display: none;">
+      <div class="analysis-container">
+        <h2>🔍 Detailed Analysis</h2>
+
+        <!-- Detailed Metrics Bars -->
+        <div class="detailed-metrics">
+          <h3>📈 Communication Metrics</h3>
+
+          <!-- Speaking Pace -->
+          <div class="metric-detail">
+            <h4>⚡ Speaking Pace</h4>
+            <div class="metric-bar">
+              <div class="metric-fill" id="paceFill" style="width: 0%;"></div>
+            </div>
+            <p id="paceDescription">Analyzing...</p>
+          </div>
+
+          <!-- Power Words -->
+          <div class="metric-detail">
+            <h4>💎 Power Words</h4>
+            <div class="metric-bar">
+              <div class="metric-fill" id="powerWordsFill"
+                style="width: 0%; background: linear-gradient(135deg, #10b981, #059669);"></div>
+            </div>
+            <p id="powerWordsDescription">Analyzing...</p>
+          </div>
+
+          <!-- Filler Words -->
+          <div class="metric-detail">
+            <h4>🚫 Filler Words</h4>
+            <div class="metric-bar">
+              <div class="metric-fill" id="fillerFill"
+                style="width: 0%; background: linear-gradient(135deg, #ef4444, #dc2626);"></div>
+            </div>
+            <p id="fillerDescription">Analyzing...</p>
+          </div>
+
+          <!-- Repetition -->
+          <div class="metric-detail">
+            <h4>🔁 Word Repetition</h4>
+            <div class="metric-bar">
+              <div class="metric-fill" id="repetitionFill"
+                style="width: 0%; background: linear-gradient(135deg, #f59e0b, #d97706);"></div>
+            </div>
+            <p id="repetitionDescription">Analyzing...</p>
+          </div>
+        </div>
+
+        <!-- Vocal Charts Section (Collapsible) -->
+        <div class="vocal-charts-section" id="vocalChartsSection" style="display: none; margin-top: 3rem;">
+          <details class="vocal-charts-box">
+            <summary>📊 Vocal Characteristics Timeline</summary>
+            <div class="vocal-charts-container">
+              <h4>🎵 Pitch Contour</h4>
+              <p>Track how your pitch varies throughout your speech</p>
+              <canvas id="pitchChart" style="max-height: 200px; width: 100%;"></canvas>
+
+              <h4 style="margin-top: 2rem;">🔊 Energy / Volume</h4>
+              <p>See where you speak with more or less energy</p>
+              <canvas id="energyChart" style="max-height: 200px; width: 100%;"></canvas>
+
+              <h4 style="margin-top: 2rem;">⏸️ Pause Analysis</h4>
+              <p>Pauses longer than 0.3 seconds are marked below</p>
+              <div id="pauseMarkers"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PRACTICE MODE SECTION ===== -->
+    <!-- SEARCH: "PRACTICE_SECTION" -->
+    <section id="practice" class="practice-section">
+      <div class="practice-container">
+        <h2>🎯 Practice Mode</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem;">
+          Practice with pre-written scripts or create your own. Record yourself and get instant comparison analysis.
+        </p>
+
+        <!-- Mode Selector -->
+        <!-- SEARCH: "PRACTICE_MODE_CONTROLS" -->
+        <!-- Mode Selector -->
+        <div class="practice-mode-selector">
+          <button class="practice-mode-btn active" id="btnLibraryScripts" onclick="showScriptLibrary()">
+            📚 Script Library
+          </button>
+          <button class="practice-mode-btn" id="btnCustomScript" onclick="showCustomScript()">
+            ✍️ Custom Script
+          </button>
+          <button class="practice-mode-btn" id="btnFavorites" onclick="showFavorites()">
+            ⭐ Favorites
+          </button>
+        </div>
+
+        <!-- SEARCH: "PRACTICE_FILTERS_NEW" -->
+        <!-- Filter Controls -->
+        <div id="practiceFilters"
+          style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0; flex-wrap: wrap;">
+
+          <!-- Category Filter -->
+          <select id="categoryFilter" class="input-modern" style="width: 200px;" onchange="filterScripts()">
+            <option value="all">All Categories</option>
+            <option value="class">🎓 Class Presentations</option>
+            <option value="friends">💬 Friend Conversations</option>
+            <option value="dating">❤️ Relationship Talks</option>
+            <option value="social">🎉 Social Events</option>
+            <option value="study">📚 Study Groups</option>
+            <option value="teacher">🏫 Teacher Interactions</option>
+            <option value="career">💼 Job/Internship</option>
+            <option value="speaking">🗣️ Public Speaking</option>
+            <option value="difficult">😌 Difficult Conversations</option>
+            <option value="casual">🎮 Casual Small Talk</option>
+          </select>
+
+          <!-- Difficulty Filter -->
+          <select id="difficultyFilter" class="input-modern" style="width: 180px;" onchange="filterScripts()">
+            <option value="all">All Difficulties</option>
+            <option value="beginner">🟢 Beginner</option>
+            <option value="intermediate">🟡 Intermediate</option>
+            <option value="advanced">🔴 Advanced</option>
+          </select>
+
+          <!-- Random Button -->
+          <button class="btn-modern btn-modern-ghost" onclick="selectRandomScript()" style="padding: 0.75rem 1.5rem;">
+            🎲 Random Script
+          </button>
+
+          <!-- Clear Filters -->
+          <button class="btn-modern btn-modern-ghost" onclick="clearFilters()" style="padding: 0.75rem 1.5rem;">
+            🔄 Clear Filters
+          </button>
+        </div>
+
+        <!-- Script Library View -->
+        <div id="scriptLibraryView">
+          <div class="script-grid" id="scriptGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Favorites View -->
+        <div id="favoritesView" style="display: none;">
+          <div class="script-grid" id="favoritesGrid">
+            <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <h3>No Favorites Yet</h3>
+              <p>Click the ❤️ icon on any script to add it to your favorites!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Script View -->
+        <div id="customScriptView" style="display: none;">
+          <div class="custom-script-container">
+            <h3>✍️ Create Your Own Script</h3>
+
+            <label for="customScriptTitle"
+              style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 600;">
+              Script Title
+            </label>
+            <input type="text" id="customScriptTitle" placeholder="e.g., My Sales Pitch" class="input-modern"
+              style="margin-bottom: 1.5rem;">
+
+            <label for="customScriptText"
+              style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-weight: 600;">
+              Your Script (10-500 words)
+            </label>
+            <textarea id="customScriptText" placeholder="Type your script here..." class="input-modern"
+              style="min-height: 200px; resize: vertical;"></textarea>
+
+            <div class="script-stats" style="margin-top: 1rem;">
+              <div>
+                <span>📝 Word Count:</span>
+                <span id="customWordCount">0</span>
+              </div>
+              <div>
+                <span>⏱️ Est. Time:</span>
+                <span id="customEstimatedTime">0:00</span>
+              </div>
+              <div>
+                <span>Status:</span>
+                <span id="customScriptStatus" style="font-weight: 700;">Enter at least 10 words</span>
+              </div>
+            </div>
+
+            <button id="startCustomPracticeBtn" class="btn-modern btn-modern-primary"
+              style="margin-top: 1.5rem; width: 100%;" disabled>
+              🚀 Start Practice
+            </button>
+          </div>
+        </div>
+
+        <!-- SEARCH: "PRACTICE_RECORDING_INTERFACE_FIXED" -->
+        <!-- Recording Interface -->
+        <div id="practiceRecordingInterface" style="display: none;" class="practice-recording">
+          <div class="card-modern" style="padding: 2rem;">
+            <h3 style="text-align: center; margin-bottom: 1rem;">Selected Script</h3>
+            <!-- Script header will be inserted here by JS -->
+
+            <div class="script-display"
+              style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+              <p id="practiceScriptText" style="line-height: 2; color: #e2e8f0; font-size: 1.05rem;">
+                <!-- Script text -->
+              </p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+              <button id="startPracticeRecordBtn" onclick="startPracticeRecording()"
+                class="btn-modern btn-modern-danger">
+                🎙️ Start Recording
+              </button>
+              <button id="stopPracticeRecordBtn" onclick="stopPracticeRecording()" class="btn-modern btn-modern-ghost"
+                style="display: none;">
+                ⏹️ Stop & Analyze
+              </button>
+              <button onclick="resetPracticeMode()" class="btn-modern btn-modern-ghost">
+                ⬅️ Back to Scripts
+              </button>
+            </div>
+
+            <div id="recordingTimer" style="display: none; margin-top: 1.5rem; text-align: center;">
+              <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 0.5rem;">Recording...</div>
+              <span style="font-size: 2rem; font-weight: 700; color: #ef4444;" id="recordingTime">0:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Script text populated by JS -->
+        </p>
+      </div>
+
+      <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button id="startPracticeRecordBtn" onclick="startPracticeRecording()" class="btn-modern btn-modern-danger">
+          🎙️ Start Recording
+        </button>
+        <button id="stopPracticeRecordBtn" onclick="stopPracticeRecording()" class="btn-modern btn-modern-ghost"
+          style="display: none;">
+          ⏹️ Stop & Analyze
+        </button>
+        <button onclick="resetPracticeMode()" class="btn-modern btn-modern-ghost">
+          ⬅️ Back to Scripts
+        </button>
+      </div>
+
+      <div id="recordingTimer" style="display: none; margin-top: 1rem;">
+        <span style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);" id="recordingTime">0:00</span>
+      </div>
+  </div>
+  </div>
+
+  <!-- Comparison Results (Hidden until analyzed) -->
+  <div id="practiceComparisonResults" style="display: none;" class="practice-results">
+    <div class="card-modern" style="text-align: center; padding: 3rem;">
+      <h3 style="color: var(--text-primary); margin-bottom: 2rem;">📊 Practice Analysis</h3>
+
+      <!-- Accuracy Ring -->
+      <div class="accuracy-ring">
+        <svg width="200" height="200" style="transform: rotate(-90deg);">
+          <circle cx="100" cy="100" r="80" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none"></circle>
+          <circle id="accuracyCircle" cx="100" cy="100" r="80" stroke="#10b981" stroke-width="12" fill="none"
+            stroke-dasharray="502.4" stroke-dashoffset="502.4" style="transition: stroke-dashoffset 1s ease;">
+          </circle>
+        </svg>
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+          <div id="accuracyPercentage" style="font-size: 3rem; font-weight: 800; color: #10b981;">0%</div>
+          <div style="color: var(--text-muted); font-size: 0.9rem;">Accuracy</div>
+        </div>
+      </div>
+
+      <p id="accuracyFeedback"
+        style="color: var(--text-secondary); margin-top: 2rem; line-height: 1.8; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <!-- Feedback populated by JS -->
+      </p>
+
+      <!-- Breakdown Stats -->
+      <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+        <div class="badge-modern badge-modern-green">
+          ✅ <span id="matchedWords">0</span> Exact Matches
+        </div>
+        <div class="badge-modern badge-modern-blue">
+          ≈ <span id="similarWords">0</span> Similar
+        </div>
+        <div class="badge-modern"
+          style="background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); color: #f87171;">
+          ➕ <span id="addedWords">0</span> Added/Different
+        </div>
+      </div>
+
+      <button onclick="resetPracticeMode()" class="btn-modern btn-modern-primary" style="margin-top: 2rem;">
+        🔄 Practice Again
+      </button>
+    </div>
+
+    <!-- Side-by-Side Comparison -->
+    <div class="comparison-container" style="margin-top: 2rem;">
+      <div class="card-modern">
+        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📄 Original Script</h4>
+        <div id="originalScriptComparison">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="card-modern">
+        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">🎤 What You Said</h4>
+        <div id="spokenTextComparison">
+          <!-- Populated by JS with color coding -->
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          <span style="background: rgba(16,185,129,0.25); padding: 0.2rem 0.4rem; border-radius: 4px;">Green =
+            Match</span>
+          <span
+            style="background: rgba(245,158,11,0.25); padding: 0.2rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Yellow
+            = Similar</span>
+          <span
+            style="background: rgba(239,68,68,0.25); padding: 0.2rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">Red
+            = Different</span>
+        </p>
+      </div>
+    </div>
+  </div>
+  </div>
+  </section>
+
+  <!-- SEARCH: "PROGRESS_DASHBOARD_SECTION" -->
+  <!-- Progress Dashboard (shown after multiple analyses) -->
+  <section id="progressDashboard" style="display: none; padding: 4rem 2rem; background: var(--bg-secondary);">
+    <div style="max-width: 1400px; margin: 0 auto;">
+      <h2 style="text-align: center; margin-bottom: 3rem; color: var(--text-primary);">📈 Your Progress Dashboard</h2>
+
+      <!-- This will be populated by JavaScript -->
+      <div id="progressContent"></div>
+    </div>
+  </section>
+
+
+  <!-- ===== PROGRESS SECTION ===== -->
+  <!-- SEARCH: "PROGRESS_SECTION" -->
+  <section id="progress" class="progress-section">
+    <div class="progress-container">
+      <h2>📈 Your Progress</h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem;">
+        Track your improvement over time. Your last 10 analyses are saved locally.
+      </p>
+
+      <!-- SEARCH: "HISTORY_SECTION_ENHANCED" -->
+      <!-- Recent Analysis History -->
+      <section id="history" class="history-section">
+        <div class="history-container">
+          <h2>🕐 Recent Analyses</h2>
+
+          <!-- Score History Chart -->
+          <div id="scoreHistory" style="display: none; margin-bottom: 3rem;">
+            <h3 style="color: var(--text-primary); margin-bottom: 1rem;">📊 Score Trends</h3>
+            <div
+              style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; height: 350px;">
+              <canvas id="scoreHistoryChart"></canvas>
+            </div>
+          </div>
+
+          <div class="history-grid" id="historyContainer">
+            <div class="history-empty">
+              <p>Your analysis history will appear here. Complete your first upload to start tracking progress!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ===== HOW IT WORKS SECTION ===== -->
+      <!-- SEARCH: "HOWITWORKS_SECTION" -->
+      <section id="howitworks" class="howitworks-section">
+        <div class="howitworks-container">
+          <h2>❓ How Cipher Works</h2>
+
+          <details class="howitworks-box" id="howitworksDetails">
+            <summary>Click to learn about our AI analysis process</summary>
+            <div class="howitworks-content">
+
+              <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                  <h3>Upload & Transcribe</h3>
+                  <p>
+                    We use Deepgram's AI to transcribe your speech with high accuracy, capturing every word, filler, and
+                    pause.
+                    Our dual-pass system creates both a raw transcript (with fillers) and a polished version.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                  <h3>Psychology Analysis</h3>
+                  <p>
+                    Our AI analyzes each word for psychological markers: confidence, authenticity, power words, filler
+                    words, and emotional tone.
+                    We use research-backed algorithms to score your communication on 3 key dimensions.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                  <h3>LLM Enhancement</h3>
+                  <p>
+                    We use Groq's Llama 3.1 to generate personalized insights, coaching tips, and practice
+                    recommendations.
+                    The AI understands context and gives you specific, actionable feedback based on your unique
+                    communication style.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">4</div>
+                <div>
+                  <h3>Vocal Feature Extraction</h3>
+                  <p>
+                    Using Web Audio API, we analyze pitch patterns, energy levels, and pause timing.
+                    These vocal characteristics reveal confidence, emphasis, and natural speech rhythm.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">5</div>
+                <div>
+                  <h3>Practice & Improve</h3>
+                  <p>
+                    Use Practice Mode to rehearse scripts, record yourself, and get instant comparison analysis.
+                    Track your progress over time and see your scores improve as you apply our recommendations.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                style="margin-top: 3rem; padding: 2rem; background: rgba(118, 75, 162, 0.1); border-radius: 12px; border: 1px solid rgba(118, 75, 162, 0.3);">
+                <h4 style="color: #a78bfa; margin-bottom: 1rem;">🔐 Privacy & Data</h4>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                  All analysis happens in your browser or through secure APIs. Your audio files are processed but not
+                  permanently stored on our servers.
+                  Analysis history is saved locally in your browser's storage. We take your privacy seriously.
+                </p>
+              </div>
+
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== FOOTER (NEW) ===== -->
+      <!-- SEARCH: "FOOTER_SECTION" -->
+      <footer class="footer">
+        <div class="footer-content">
+          <div class="footer-tagline">
+            🔮 Cipher - Decode Your Communication DNA
+          </div>
+          <p class="footer-subtitle">
+            Powered by AI Psychology • Built with ❤️ by Asfan Vohra
+          </p>
+
+          <div class="footer-links">
+            <a href="#hero">Home</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#practice">Practice</a>
+            <a href="#progress">Progress</a>
+            <a href="#howitworks">How It Works</a>
+            <a href="https://github.com/asfanvohra" target="_blank" rel="noopener">GitHub</a>
+          </div>
+
+          <p class="footer-copyright">
+            © 2025 Cipher AI. All rights reserved. • Your speech, your insights, your growth.
+          </p>
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <!-- SEARCH: "LOADING_OVERLAY" -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h3 id="loadingTitle">Processing...</h3>
+        <p id="loadingDescription">Please wait while we analyze your speech.</p>
+        <div class="loading-progress">
+          <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <p class="loading-tip">💡 Tip: Practice eliminating filler words by pausing silently instead.</p>
+      </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/modules/tts.js"></script>
+    <script src="js/modules/ai-assistant.js"></script>
+    <script src="js/modules/videoanalysis.js"></script>
     <script src="script.js"></script>
+
+</body>
+
+</html
+<footer class="footer">
+        <div class="footer-content">
+          <div class="footer-tagline">
+            🔮 Cipher - Decode Your Communication DNA
+          </div>
+          <p class="footer-subtitle">
+            Powered by AI Psychology • Built with ❤️ by Asfan Vohra
+          </p>
+
+          <div class="footer-links">
+            <a href="#hero">Home</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#practice">Practice</a>
+            <a href="#progress">Progress</a>
+            <a href="#howitworks">How It Works</a>
+            <a href="https://github.com/asfanvohra" target="_blank" rel="noopener">GitHub</a>
+          </div>
+
+          <p class="footer-copyright">
+            © 2025 Cipher AI. All rights reserved. • Your speech, your insights, your growth.
+          </p>
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <!-- SEARCH: "LOADING_OVERLAY" -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h3 id="loadingTitle">Processing...</h3>
+        <p id="loadingDescription">Please wait while we analyze your speech.</p>
+        <div class="loading-progress">
+          <div class="loading-bar" id="loadingBar"></div>
+        </div>
+        <p class="loading-tip">💡 Tip: Practice eliminating filler words by pausing silently instead.</p>
+      </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/modules/tts.js"></script>
+    <script src="js/modules/ai-assistant.js"></script>
+    <script src="js/modules/videoanalysis.js"></script>
+    <script src="script.js"></script>
+
+
+  <script src="/script.js"></script>
 </body>
 </html>

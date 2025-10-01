@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- SEARCH: "PROGRESS_PAGE_HEAD" -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Progress - Cipher</title>
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles-modern.css">
+</head>
+<body>
+
+  <!-- SEARCH: "SHARED_NAVBAR" -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <a href="index.html">
+          <img src="assets/images/logo.png" alt="Cipher Logo" style="height: 48px; width: 48px; object-fit: contain;">
+          <span style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #764ba2 0%, #667eea 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cipher</span>
+        </a>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="results.html">Dashboard</a></li>
+        <li><a href="practice.html">Practice</a></li>
+        <li><a href="progress.html">Progress</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- SEARCH: "PROGRESS_MAIN_CONTENT" -->
+  <div class="main-content" style="padding-top: 100px;">
+    
+    <section id="progress" class="progress-section">
+      <div class="progress-container">
+        <h2>📈 Your Progress</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem;">
+          Track your improvement over time. Your last 10 analyses are saved locally.
+        </p>
+
+        <!-- Score History Chart -->
+        <div id="scoreHistory" style="display: none;" class="score-history-section">
+          <h3>📊 Score Trends</h3>
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem;">
+            <canvas id="scoreHistoryChart"></canvas>
+          </div>
+        </div>
+
+        <!-- History Grid -->
+        <div class="history-section">
+          <h3>🕐 Recent Analyses</h3>
+          <div class="history-grid" id="historyContainer">
+            <div class="history-empty">
+              <p>Your analysis history will appear here. Complete your first upload to start tracking progress!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- SEARCH: "SHARED_FOOTER" -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-tagline">🔮 Cipher - Decode Your Communication DNA</div>
+      <p class="footer-subtitle">Powered by AI Psychology • Built with ❤️ by Asfan Vohra</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="results.html">Dashboard</a>
+        <a href="practice.html">Practice</a>
+      </div>
+      <p class="footer-copyright">© 2025 Cipher AI. Your speech, your insights, your growth.</p>
+    </div>
+  </footer>
+
+  <!-- SEARCH: "PROGRESS_PAGE_SCRIPTS" -->
+  <script src="js/utils/navigation.js"></script>
+  <script src="js/modules/tts.js"></script>
+  <script src="js/modules/ai-assistant.js"></script>
+  <script src="script.js"></script>
+  
+  <!-- SEARCH: "PROGRESS_PAGE_INIT" -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Load analysis history
+      loadAnalysisHistory();
+      updateScoreHistoryChart();
+      console.log('✅ Progress page loaded');
+    });
+  </script>
+</body>
+</html>

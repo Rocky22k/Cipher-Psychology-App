@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cipher - Real Transcription Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        max-width: 800px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #764ba2;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .upload-zone {
+        border: 3px dashed #764ba2;
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+      }
+
+      .upload-zone:hover {
+        background: #f8f9ff;
+        border-color: #667eea;
+      }
+
+      .upload-zone.active {
+        background: #f0f4ff;
+        border-color: #667eea;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      .btn {
+        background: linear-gradient(45deg, #764ba2, #667eea);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+      }
+
+      .status {
+        margin-top: 2rem;
+        padding: 1rem;
+        border-radius: 10px;
+        background: #f8f9ff;
+      }
+
+      .transcript-box {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: #f8f9ff;
+        border-radius: 15px;
+        border-left: 4px solid #764ba2;
+      }
+
+      .transcript-box h3 {
+        color: #764ba2;
+        margin-bottom: 1rem;
+      }
+
+      .word {
+        display: inline;
+        padding: 2px 4px;
+        margin: 2px;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.2s ease;
+      }
+
+      .word:hover {
+        background: #e0e7ff;
+      }
+
+      .confidence-high {
+        background: rgba(34, 197, 94, 0.2);
+        border-bottom: 2px solid #22c55e;
+      }
+
+      .confidence-medium {
+        background: rgba(251, 191, 36, 0.2);
+        border-bottom: 2px solid #fbbf24;
+      }
+
+      .confidence-low {
+        background: rgba(239, 68, 68, 0.2);
+        border-bottom: 2px solid #ef4444;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #764ba2;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎙️ Cipher Transcription Test</h1>
+
+      <div class="upload-zone" id="uploadZone">
+        <p style="font-size: 3rem; margin-bottom: 1rem">🎵</p>
+        <h3>Upload Audio File</h3>
+        <p style="margin: 1rem 0">Drop an audio file here or click to browse</p>
+        <p style="font-size: 0.9rem; color: #666">
+          Supports: MP3, WAV, M4A, MP4 (up to 25MB)
+        </p>
+        <input type="file" id="audioInput" accept="audio/*,video/*" />
+        <button
+          class="btn"
+          onclick="document.getElementById('audioInput').click()"
+        >
+          Choose File
+        </button>
+      </div>
+
+      <div id="status"></div>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      const DEEPGRAM_API_KEY = "91e152e7780215029b76d36b67aeb8118896130f";
+
+      const uploadZone = document.getElementById("uploadZone");
+      const audioInput = document.getElementById("audioInput");
+      const statusDiv = document.getElementById("status");
+      const resultsDiv = document.getElementById("results");
+
+      // Drag and drop handlers
+      uploadZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadZone.classList.add("active");
+      });
+
+      uploadZone.addEventListener("dragleave", () => {
+        uploadZone.classList.remove("active");
+      });
+
+      uploadZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove("active");
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      audioInput.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      async function handleFile(file) {
+        console.log("Processing file:", file.name);
+
+        // Check file size (25MB limit)
+        if (file.size > 25 * 1024 * 1024) {
+          statusDiv.innerHTML = `<div class="status" style="background: #fee; color: #c00;">❌ File too large! Maximum 25MB allowed.</div>`;
+          return;
+        }
+
+        statusDiv.innerHTML = `
+                <div class="status">
+                    <div class="loading"></div>
+                    <strong> Transcribing "${file.name}"...</strong>
+                    <p style="margin-top: 0.5rem; color: #666;">This may take 10-30 seconds</p>
+                </div>
+            `;
+
+        try {
+          // Read file as ArrayBuffer
+          const arrayBuffer = await file.arrayBuffer();
+
+          // Call Deepgram API
+          const response = await fetch(
+            "https://api.deepgram.com/v1/listen?model=nova-2&smart_format=true&punctuate=true&utterances=true",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Token ${DEEPGRAM_API_KEY}`,
+                "Content-Type": file.type || "audio/wav",
+              },
+              body: arrayBuffer,
+            }
+          );
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(
+              `Deepgram API error: ${response.status} - ${errorText}`
+            );
+          }
+
+          const result = await response.json();
+          console.log("Deepgram result:", result);
+
+          // Extract transcript
+          const transcript =
+            result.results.channels[0].alternatives[0].transcript;
+          const words = result.results.channels[0].alternatives[0].words;
+
+          if (!transcript || transcript.trim() === "") {
+            statusDiv.innerHTML = `<div class="status" style="background: #fff3cd; color: #856404;">⚠️ No speech detected in the audio file.</div>`;
+            return;
+          }
+
+          statusDiv.innerHTML = `<div class="status" style="background: #d4edda; color: #155724;">✅ Transcription complete! Found ${words.length} words.</div>`;
+
+          displayResults(transcript, words);
+        } catch (error) {
+          console.error("Transcription error:", error);
+          statusDiv.innerHTML = `
+                    <div class="status" style="background: #fee; color: #c00;">
+                        ❌ Transcription failed: ${error.message}
+                    </div>
+                `;
+        }
+      }
+
+      function displayResults(transcript, words) {
+        // Analyze words for psychology
+        const analyzedWords = words.map((word) => {
+          const text = word.word.toLowerCase();
+          let confidenceLevel = "medium";
+          let insights = "Normal communication";
+
+          // Filler words
+          const fillers = [
+            "um",
+            "uh",
+            "like",
+            "you",
+            "know",
+            "actually",
+            "basically",
+          ];
+          if (fillers.includes(text)) {
+            confidenceLevel = "low";
+            insights = "Filler word - indicates hesitation";
+          }
+
+          // Confidence words
+          const confident = [
+            "definitely",
+            "absolutely",
+            "certainly",
+            "confident",
+            "sure",
+            "believe",
+          ];
+          if (confident.some((cw) => text.includes(cw))) {
+            confidenceLevel = "high";
+            insights = "Strong confidence marker";
+          }
+
+          // Personal words
+          const personal = ["i", "me", "my", "myself"];
+          if (personal.includes(text)) {
+            confidenceLevel = "high";
+            insights = "Personal language shows authenticity";
+          }
+
+          return {
+            ...word,
+            confidenceLevel,
+            insights,
+          };
+        });
+
+        // Display full transcript
+        resultsDiv.innerHTML = `
+                <div class="transcript-box">
+                    <h3>📝 Your Transcript</h3>
+                    <p style="line-height: 2; font-size: 1.1rem;">
+                        ${analyzedWords
+                          .map(
+                            (word) =>
+                              `<span class="word confidence-${
+                                word.confidenceLevel
+                              }" 
+                                   title="${
+                                     word.insights
+                                   } (${word.start.toFixed(1)}s)"
+                                   onclick="alert('Word: ${
+                                     word.word
+                                   }\\nTime: ${word.start.toFixed(
+                                1
+                              )}s\\nConfidence: ${(
+                                word.confidence * 100
+                              ).toFixed(1)}%\\nInsight: ${word.insights}')">
+                                ${word.word}
+                            </span>`
+                          )
+                          .join(" ")}
+                    </p>
+                    
+                    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                        <h4 style="color: #764ba2; margin-bottom: 1rem;">📊 Quick Stats</h4>
+                        <p><strong>Total Words:</strong> ${
+                          analyzedWords.length
+                        }</p>
+                        <p><strong>Filler Words:</strong> ${
+                          analyzedWords.filter(
+                            (w) => w.confidenceLevel === "low"
+                          ).length
+                        }</p>
+                        <p><strong>Confidence Words:</strong> ${
+                          analyzedWords.filter(
+                            (w) => w.confidenceLevel === "high"
+                          ).length
+                        }</p>
+                        <p><strong>Duration:</strong> ${(
+                          words[words.length - 1]?.end || 0
+                        ).toFixed(1)} seconds</p>
+                    </div>
+                    
+                    <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                        💡 Click on any word to see detailed analysis
+                    </p>
+                </div>
+            `;
+      }
+    </script>
+  </body>
+</html>

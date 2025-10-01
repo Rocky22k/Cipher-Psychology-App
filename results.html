@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cipher - Decode Your Communication DNA</title>
+
+  <!-- MediaPipe CDN -->
+  crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles-modern.css">
+  <!-- SEARCH: "ADD_NAVIGATION_SCRIPT" -->
+  <script src="js/utils/navigation.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+      <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+        <a href="#hero" onclick="goHome()"
+          style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+          <img src="assets/images/logo.png" alt="Cipher Logo" style="height: 48px; width: 48px; object-fit: contain;">
+          <span
+            style="font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #764ba2 0%, #667eea 50%, #06b6d4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">Cipher</span>
+        </a>
+      </div>
+
+
+      <ul class="nav-menu">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#dashboard">Dashboard</a></li>
+        <li><a href="#transcript">Transcript</a></li>
+        <li><a href="#analysis">Analysis</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#progress">Progress</a></li>
+        <li><a href="#howitworks">How It Works</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+
+<footer class="footer">
+        <div class="footer-content">
+          <div class="footer-tagline">
+            🔮 Cipher - Decode Your Communication DNA
+          </div>
+          <p class="footer-subtitle">
+            Powered by AI Psychology • Built with ❤️ by Asfan Vohra
+          </p>
+
+          <div class="footer-links">
+            <a href="#hero">Home</a>
+            <a href="#dashboard">Dashboard</a>
+            <a href="#practice">Practice</a>
+            <a href="#progress">Progress</a>
+            <a href="#howitworks">How It Works</a>
+            <a href="https://github.com/asfanvohra" target="_blank" rel="noopener">GitHub</a>
+          </div>
+
+          <p class="footer-copyright">
+            © 2025 Cipher AI. All rights reserved. • Your speech, your insights, your growth.
+          </p>
+        </div>
+      </footer>
+
+  <script src="js/script.js"></script>
+  <script>
+    // Load analysis data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const data = sessionStorage.getItem('cipher-analysis-data');
+      if (data) {
+        const analysis = JSON.parse(data);
+        if (typeof displayAnalysisResults === 'function') {
+          displayAnalysisResults(analysis);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
